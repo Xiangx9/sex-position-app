@@ -64,6 +64,16 @@ function Scene({ kind }) {
       </g>
     );
   }
+  if (kind === "lowtable") {
+    // 矮桌：桌面 y=118，比普通桌子低
+    return (
+      <g>
+        <rect x="16" y="118" width="102" height="10" rx="3" fill={INK} opacity="0.18" />
+        <line x1="16" y1="118" x2="118" y2="118" stroke={INK} strokeWidth="1.6" opacity="0.5" />
+        <line x1="10" y1="158" x2="250" y2="158" stroke={INK} strokeWidth="1.4" opacity="0.35" />
+      </g>
+    );
+  }
   if (kind === "wall") {
     return <line x1="28" y1="16" x2="28" y2={FLOOR} stroke={INK} strokeWidth="2" strokeDasharray="8 5" opacity="0.45" />;
   }
