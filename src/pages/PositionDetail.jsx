@@ -61,28 +61,12 @@ export default function PositionDetail() {
           <p className="mt-3 text-gray-600">{position.description}</p>
         </div>
 
-        {/* 总览 + 四步缩略 */}
-        <div className="mb-8 space-y-3">
-          <div className="aspect-[16/10] rounded-2xl bg-gradient-to-br from-rose-50 to-orange-50 flex items-center justify-center border border-rose-100">
-            <PositionIllustration id={position.id} className="text-rose-400 max-w-md w-full h-full" />
+        {/* 姿势示意图 */}
+        <div className="mb-8">
+          <div className="aspect-[16/10] rounded-2xl bg-gradient-to-br from-rose-50 to-orange-50 flex items-center justify-center border border-rose-100 overflow-hidden">
+            <PositionIllustration id={position.id} name={position.name} />
           </div>
-          <div className="grid grid-cols-4 gap-2">
-            {["准备", "靠近", "对齐", "完成"].map((label, s) => (
-              <div
-                key={s}
-                className="rounded-xl bg-gradient-to-br from-rose-50 to-orange-50 border border-rose-100 flex flex-col items-center overflow-hidden"
-              >
-                <div className="aspect-square w-full flex items-center justify-center">
-                  <PositionIllustration
-                    id={position.id}
-                    step={s}
-                    className="text-rose-400 w-full h-full"
-                  />
-                </div>
-                <span className="text-[10px] text-gray-500 pb-1.5 font-medium">{label}</span>
-              </div>
-            ))}
-          </div>
+          <p className="mt-2 text-center text-xs text-gray-400">示意图</p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8 text-sm">
@@ -102,7 +86,7 @@ export default function PositionDetail() {
 
         <section className="bg-white rounded-2xl border border-gray-100 p-6 mb-8">
           <h2 className="text-lg font-semibold text-gray-900 mb-5">动作步骤</h2>
-          <StepList steps={position.steps} positionId={position.id} />
+          <StepList steps={position.steps} />
         </section>
 
         <section className="bg-white rounded-2xl border border-gray-100 p-6 mb-8">

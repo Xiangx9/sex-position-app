@@ -7,11 +7,8 @@ export default function PositionCard({ position }) {
       to={`/position/${position.id}`}
       className="group block bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-lg transition-shadow"
     >
-      <div className="aspect-[4/3] bg-gradient-to-br from-rose-50 to-orange-50 flex items-center justify-center">
-        <PositionIllustration
-          id={position.id}
-          className="text-rose-300 group-hover:text-rose-400 transition-colors"
-        />
+      <div className="aspect-[16/10] bg-gradient-to-br from-rose-50 to-orange-50 flex items-center justify-center overflow-hidden">
+        <PositionIllustration id={position.id} name={position.name} />
       </div>
       <div className="p-4">
         <div className="flex items-center justify-between mb-1 gap-2">
