@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import PositionIllustration from "./PositionIllustration";
 
 export default function PositionCard({ position }) {
   return (
@@ -7,7 +8,10 @@ export default function PositionCard({ position }) {
       className="group block bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-lg transition-shadow"
     >
       <div className="aspect-[4/3] bg-gradient-to-br from-rose-50 to-orange-50 flex items-center justify-center">
-        <span className="text-4xl text-rose-200 font-light">{position.name[0]}</span>
+        <PositionIllustration
+          id={position.id}
+          className="text-rose-300 group-hover:text-rose-400 transition-colors"
+        />
       </div>
       <div className="p-4">
         <div className="flex items-center justify-between mb-1 gap-2">

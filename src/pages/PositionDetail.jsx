@@ -3,6 +3,7 @@ import { positions } from "../data/positions";
 import Header from "../components/Header";
 import StepList from "../components/StepList";
 import PositionCard from "../components/PositionCard";
+import PositionIllustration from "../components/PositionIllustration";
 
 export default function PositionDetail() {
   const { id } = useParams();
@@ -60,8 +61,8 @@ export default function PositionDetail() {
           <p className="mt-3 text-gray-600">{position.description}</p>
         </div>
 
-        <div className="aspect-[16/10] rounded-2xl bg-gradient-to-br from-rose-50 to-orange-50 flex items-center justify-center mb-8">
-          <span className="text-6xl text-rose-200 font-light">{position.name[0]}</span>
+        <div className="aspect-[16/10] rounded-2xl bg-gradient-to-br from-rose-50 to-orange-50 flex items-center justify-center mb-8 border border-rose-100">
+          <PositionIllustration id={position.id} className="text-rose-400 max-w-md w-full h-full" />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8 text-sm">
