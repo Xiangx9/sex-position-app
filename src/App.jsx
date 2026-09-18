@@ -5,7 +5,7 @@ import SafetyGuide from "./pages/SafetyGuide";
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/sex-position-app/">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/position/:id" element={<PositionDetail />} />
