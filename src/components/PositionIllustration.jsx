@@ -3,24 +3,32 @@
  * 图形数据来自 src/data/poseShapes.js（每个姿势独立写死的关节坐标）。
  * step: undefined=总览, 0~3=分步靠近动画
  */
-import { getPose, buildParts, PALETTE, STEP_COEF, FLOOR, MATTRESS_TOP } from "../data/poseShapes";
+import {
+  getPose,
+  buildParts,
+  closeOffset,
+  PALETTE,
+  STEP_COEF,
+  FLOOR,
+  MATTRESS_TOP,
+} from "../data/poseShapes";
 
 const INK = "#94A3B8";
 
-/* ---------- 基本形状 ---------- */
+/* ---------- 基本形状：火柴人 = 线段 + 圆头 ---------- */
 function Shape({ s, color }) {
   const o = s.o ?? 1;
   if (s.t === "c") return <circle cx={s.cx} cy={s.cy} r={s.r} fill={color} opacity={o} />;
   return (
-    <rect
-      x={s.cx - s.w / 2}
-      y={s.cy - s.h / 2}
-      width={s.w}
-      height={s.h}
-      rx={s.rx ?? 6}
-      fill={color}
+    <line
+      x1={s.x1}
+      y1={s.y1}
+      x2={s.x2}
+      y2={s.y2}
+      stroke={color}
+      strokeWidth={s.w}
+      strokeLinecap="round"
       opacity={o}
-      transform={`rotate(${s.rot} ${s.cx} ${s.cy})`}
     />
   );
 }
@@ -137,8 +145,9 @@ export function PoseSvg({ id, step }) {
   const k = STEP_COEF[s] ?? 0;
   const a = pose.A;
   const b = pose.B;
-  const bx = (b?.approach?.[0] ?? 0) * k;
-  const by = (b?.approach?.[1] ?? 0) * k;
+  const [cx, cy] = closeOffset(pose);
+  const bx = (b?.approach?.[0] ?? 0) * k + cx;
+  const by = (b?.approach?.[1] ?? 0) * k + cy;
 
   return (
     <svg
