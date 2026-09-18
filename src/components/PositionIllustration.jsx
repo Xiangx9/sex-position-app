@@ -1,298 +1,488 @@
 /**
- * 统一线稿插图：抽象人形轮廓，健身/教学风格，无露骨细节。
- * 按 posture 切换构图。
+ * 线稿插图（含分步）
+ * step: undefined = 总览；0~3 = 分步示意
+ * family 归类复用同一套分解动作，再按 id 做小差异
  */
-export default function PositionIllustration({ id, className = "" }) {
-  const common = {
-    fill: "none",
-    stroke: "currentColor",
-    strokeWidth: 2.2,
-    strokeLinecap: "round",
-    strokeLinejoin: "round",
-  };
-
-  const Head = ({ cx, cy, r = 8 }) => (
-    <circle cx={cx} cy={cy} r={r} {...common} />
-  );
+export default function PositionIllustration({ id, step, className = "" }) {
+  const family = getFamily(id);
+  const sceneStep = step === undefined || step === null ? "overview" : step;
 
   return (
     <div
       className={`w-full h-full flex items-center justify-center text-rose-300 ${className}`}
       aria-hidden
     >
-      <svg viewBox="0 0 200 160" className="w-full h-full max-h-full p-4">
-        {getScene(id, common, Head)}
+      <svg
+        viewBox="0 0 240 180"
+        className="w-full h-full max-h-full p-2"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        {renderScene(family, id, sceneStep)}
       </svg>
     </div>
   );
 }
 
-function getScene(id, common, Head) {
-  switch (id) {
-    case "missionary":
-      return (
-        <g>
-          {/* 下方平躺 */}
-          <Head cx={70} cy={48} />
-          <path d="M78 52 L130 52 L145 70" {...common} />
-          <path d="M90 52 L85 95 L70 110" {...common} />
-          <path d="M110 52 L120 95 L140 108" {...common} />
-          {/* 上方 */}
-          <Head cx={100} cy={28} />
-          <path d="M100 36 L100 70" {...common} />
-          <path d="M100 45 L75 60" {...common} />
-          <path d="M100 45 L125 60" {...common} />
-          <path d="M100 70 L85 100" {...common} />
-          <path d="M100 70 L120 100" {...common} />
-        </g>
-      );
+function H({ cx, cy, r = 9 }) {
+  return <circle cx={cx} cy={cy} r={r} />;
+}
 
-    case "cowgirl":
-      return (
-        <g>
-          {/* 下方平躺 */}
-          <Head cx={55} cy={70} />
-          <path d="M63 72 L150 72" {...common} />
-          <path d="M90 72 L85 110" {...common} />
-          <path d="M120 72 L130 110" {...common} />
-          {/* 上方跨坐 */}
-          <Head cx={110} cy={28} />
-          <path d="M110 36 L110 72" {...common} />
-          <path d="M110 50 L85 72" {...common} />
-          <path d="M110 50 L135 72" {...common} />
-          <path d="M110 72 L95 105" {...common} />
-          <path d="M110 72 L128 105" {...common} />
-        </g>
-      );
+function Ground() {
+  return <path d="M15 155 H225" strokeOpacity="0.25" strokeWidth="1.5" />;
+}
 
-    case "reverse-cowgirl":
-      return (
-        <g>
-          <Head cx={55} cy={70} />
-          <path d="M63 72 L150 72" {...common} />
-          <path d="M90 72 L85 110" {...common} />
-          <path d="M120 72 L130 110" {...common} />
-          {/* 背对跨坐：头朝右 */}
-          <Head cx={130} cy={30} />
-          <path d="M122 36 L100 72" {...common} />
-          <path d="M110 50 L90 72" {...common} />
-          <path d="M115 55 L140 70" {...common} />
-          <path d="M100 72 L95 105" {...common} />
-          <path d="M100 72 L120 105" {...common} />
-        </g>
-      );
+function getFamily(id) {
+  const map = {
+    missionary: "lie_top",
+    "raised-legs": "lie_top",
+    prone: "lie_top",
+    cowgirl: "straddle",
+    "reverse-cowgirl": "straddle",
+    doggy: "kneel_behind",
+    "knee-chest": "kneel_behind",
+    spooning: "side",
+    "from-behind-side": "side",
+    scissor: "side",
+    lotus: "sit_face",
+    "sitting-face": "sit_face",
+    lap: "sit_face",
+    chair: "chair",
+    standing: "stand",
+    "face-to-face-standing": "stand",
+    edge: "edge",
+    table: "edge",
+    bridge: "bridge",
+  };
+  return map[id] || "lie_top";
+}
 
-    case "doggy":
-      return (
-        <g>
-          {/* 跪趴 */}
-          <Head cx={50} cy={55} />
-          <path d="M58 58 L100 50 L130 55" {...common} />
-          <path d="M70 55 L55 95" {...common} />
-          <path d="M70 55 L80 95" {...common} />
-          <path d="M115 52 L110 95" {...common} />
-          <path d="M115 52 L130 90" {...common} />
-          {/* 后方 */}
-          <Head cx={155} cy={40} />
-          <path d="M148 48 L120 60" {...common} />
-          <path d="M140 55 L145 95" {...common} />
-          <path d="M140 55 L165 90" {...common} />
-          <path d="M145 70 L125 75" {...common} />
-        </g>
-      );
-
-    case "spooning":
-    case "from-behind-side":
-      return (
-        <g>
-          {/* 前方侧卧 */}
-          <Head cx={55} cy={55} />
-          <path d="M63 58 L120 58" {...common} />
-          <path d="M80 58 L75 100" {...common} />
-          <path d="M100 58 L115 95" {...common} />
-          {/* 后方贴合 */}
-          <Head cx={45} cy={42} />
-          <path d="M53 48 L115 48" {...common} />
-          <path d="M70 48 L68 58" {...common} />
-          <path d="M95 48 L100 58" {...common} />
-          <path d="M60 48 L55 90" {...common} />
-        </g>
-      );
-
-    case "lotus":
-    case "sitting-face":
-      return (
-        <g>
-          <Head cx={70} cy={35} />
-          <path d="M70 43 L70 85" {...common} />
-          <path d="M70 55 L50 75" {...common} />
-          <path d="M70 55 L90 75" {...common} />
-          <path d="M70 85 L55 110" {...common} />
-          <path d="M70 85 L90 105" {...common} />
-          <Head cx={130} cy={35} />
-          <path d="M130 43 L130 85" {...common} />
-          <path d="M130 55 L110 75" {...common} />
-          <path d="M130 55 L150 75" {...common} />
-          <path d="M130 85 L115 110" {...common} />
-          <path d="M130 85 L145 105" {...common} />
-          {/* 相对靠近示意 */}
-          <path d="M85 60 L115 60" {...common} strokeDasharray="4 3" />
-        </g>
-      );
-
-    case "prone":
-      return (
-        <g>
-          <Head cx={45} cy={70} />
-          <path d="M53 70 L155 70" {...common} />
-          <path d="M80 70 L75 100" {...common} />
-          <path d="M120 70 L130 100" {...common} />
-          <Head cx={100} cy={42} />
-          <path d="M100 50 L100 70" {...common} />
-          <path d="M100 55 L80 65" {...common} />
-          <path d="M100 55 L120 65" {...common} />
-          <path d="M95 70 L90 95" {...common} />
-          <path d="M105 70 L115 95" {...common} />
-        </g>
-      );
-
-    case "standing":
-    case "face-to-face-standing":
-      return (
-        <g>
-          {/* 墙 */}
-          <path d="M30 20 L30 140" {...common} strokeDasharray="6 4" />
-          <Head cx={70} cy={30} />
-          <path d="M70 38 L70 90" {...common} />
-          <path d="M70 55 L50 75" {...common} />
-          <path d="M70 55 L95 70" {...common} />
-          <path d="M70 90 L55 130" {...common} />
-          <path d="M70 90 L90 130" {...common} />
-          <Head cx={120} cy={28} />
-          <path d="M120 36 L120 90" {...common} />
-          <path d="M120 55 L100 70" {...common} />
-          <path d="M120 55 L145 70" {...common} />
-          <path d="M120 90 L105 130" {...common} />
-          <path d="M120 90 L140 130" {...common} />
-        </g>
-      );
-
+function renderScene(family, id, step) {
+  switch (family) {
+    case "lie_top":
+      return sceneLieTop(id, step);
+    case "straddle":
+      return sceneStraddle(id, step);
+    case "kneel_behind":
+      return sceneKneelBehind(id, step);
+    case "side":
+      return sceneSide(id, step);
+    case "sit_face":
+      return sceneSitFace(id, step);
     case "chair":
-    case "lap":
-      return (
-        <g>
-          {/* 椅子简笔 */}
-          <path d="M50 100 L50 70 L120 70 L120 100" {...common} />
-          <path d="M50 70 L50 40" {...common} />
-          <path d="M55 100 L55 120" {...common} />
-          <path d="M115 100 L115 120" {...common} />
-          <Head cx={85} cy={32} />
-          <path d="M85 40 L85 70" {...common} />
-          <path d="M85 50 L65 65" {...common} />
-          <path d="M85 50 L110 60" {...common} />
-          <Head cx={115} cy={28} />
-          <path d="M110 36 L95 70" {...common} />
-          <path d="M105 50 L125 70" {...common} />
-          <path d="M100 70 L90 100" {...common} />
-          <path d="M100 70 L120 95" {...common} />
-        </g>
-      );
-
+      return sceneChair(id, step);
+    case "stand":
+      return sceneStand(id, step);
     case "edge":
-    case "table":
-      return (
-        <g>
-          {/* 平面边缘 */}
-          <path d="M20 85 L160 85" {...common} />
-          <path d="M20 85 L20 120" {...common} />
-          <Head cx={70} cy={45} />
-          <path d="M70 53 L70 85" {...common} />
-          <path d="M70 65 L50 80" {...common} />
-          <path d="M70 65 L100 75" {...common} />
-          <path d="M70 85 L55 85" {...common} />
-          <path d="M70 85 L100 70" {...common} />
-          <Head cx={145} cy={40} />
-          <path d="M140 48 L115 75" {...common} />
-          <path d="M135 60 L135 110" {...common} />
-          <path d="M135 60 L155 100" {...common} />
-        </g>
-      );
-
-    case "scissor":
-      return (
-        <g>
-          <Head cx={50} cy={45} />
-          <path d="M58 50 L110 55" {...common} />
-          <path d="M75 52 L70 100" {...common} />
-          <path d="M95 54 L130 90" {...common} />
-          <Head cx={150} cy={45} />
-          <path d="M142 50 L90 55" {...common} />
-          <path d="M125 52 L130 100" {...common} />
-          <path d="M105 54 L70 90" {...common} />
-        </g>
-      );
-
+      return sceneEdge(id, step);
     case "bridge":
-      return (
-        <g>
-          <Head cx={50} cy={55} />
-          <path d="M58 58 L90 40 L130 55 L150 70" {...common} />
-          <path d="M90 40 L85 90" {...common} />
-          <path d="M120 48 L130 95" {...common} />
-          <Head cx={100} cy={22} />
-          <path d="M100 30 L100 50" {...common} />
-          <path d="M100 40 L80 55" {...common} />
-          <path d="M100 40 L125 55" {...common} />
-        </g>
-      );
-
-    case "raised-legs":
-      return (
-        <g>
-          <Head cx={55} cy={50} />
-          <path d="M63 52 L120 52" {...common} />
-          <path d="M90 52 L100 25" {...common} />
-          <path d="M105 52 L125 20" {...common} />
-          <Head cx={100} cy={28} />
-          <path d="M100 36 L100 70" {...common} />
-          <path d="M100 50 L75 60" {...common} />
-          <path d="M100 50 L130 45" {...common} />
-          <path d="M100 70 L85 100" {...common} />
-          <path d="M100 70 L120 100" {...common} />
-        </g>
-      );
-
-    case "knee-chest":
-      return (
-        <g>
-          <Head cx={45} cy={75} />
-          <path d="M53 72 L100 45 L140 55" {...common} />
-          <path d="M75 55 L60 100" {...common} />
-          <path d="M75 55 L90 100" {...common} />
-          <path d="M120 48 L115 95" {...common} />
-          <Head cx={155} cy={38} />
-          <path d="M148 46 L125 58" {...common} />
-          <path d="M145 55 L150 100" {...common} />
-          <path d="M145 55 L170 95" {...common} />
-        </g>
-      );
-
+      return sceneBridge(id, step);
     default:
-      return (
-        <g>
-          <Head cx={80} cy={40} />
-          <path d="M80 48 L80 100" {...common} />
-          <path d="M80 65 L55 85" {...common} />
-          <path d="M80 65 L105 85" {...common} />
-          <path d="M80 100 L60 135" {...common} />
-          <path d="M80 100 L105 135" {...common} />
-          <Head cx={130} cy={40} />
-          <path d="M130 48 L130 100" {...common} />
-          <path d="M130 65 L110 85" {...common} />
-          <path d="M130 65 L155 85" {...common} />
-          <path d="M130 100 L115 135" {...common} />
-          <path d="M130 100 L150 135" {...common} />
-        </g>
-      );
+      return sceneLieTop(id, step);
   }
+}
+
+/* —— 仰卧类：传教士 / 抬腿 / 俯卧 —— */
+function sceneLieTop(id, step) {
+  const s = step === "overview" ? 2 : step;
+  return (
+    <g>
+      <Ground />
+      {/* 下方始终躺 */}
+      <H cx={48} cy={id === "prone" ? 95 : 85} />
+      <path
+        d={
+          id === "prone"
+            ? "M57 95 H170"
+            : "M57 86 C90 82, 125 84, 155 92"
+        }
+        strokeWidth="2.2"
+      />
+      {id === "raised-legs" && s >= 2 ? (
+        <>
+          <path d="M100 85 L118 40 L125 22" />
+          <path d="M125 88 L150 38 L160 20" />
+        </>
+      ) : (
+        <>
+          <path d="M90 88 L80 125 L70 150" />
+          <path d="M130 88 L145 125 L160 148" />
+        </>
+      )}
+      {/* 步骤演进：无人 → 靠近 → 对齐 → 完成 */}
+      {s >= 1 && (
+        <>
+          <H cx={s === 1 ? 160 : 120} cy={s === 1 ? 50 : 40} />
+          <path
+            d={
+              s === 1
+                ? "M160 59 L150 90"
+                : "M120 49 C120 60, 118 75, 115 95"
+            }
+            strokeWidth="2.2"
+          />
+          {s >= 2 && (
+            <>
+              <path d="M120 58 L95 78" />
+              <path d="M120 58 L148 72" />
+              <path d="M115 95 L98 135" />
+              <path d="M115 95 L140 135" />
+            </>
+          )}
+          {s === 1 && (
+            <>
+              <path d="M155 70 L145 110" />
+              <path d="M165 70 L175 110" />
+            </>
+          )}
+        </>
+      )}
+      {s === 0 && (
+        <path d="M160 40 L180 40" strokeOpacity="0.3" strokeDasharray="4 3" />
+      )}
+    </g>
+  );
+}
+
+/* —— 跨坐类 —— */
+function sceneStraddle(id, step) {
+  const s = step === "overview" ? 2 : step;
+  const reverse = id === "reverse-cowgirl";
+  return (
+    <g>
+      <Ground />
+      <H cx={42} cy={100} />
+      <path d="M51 100 C90 94, 140 94, 175 100" strokeWidth="2.2" />
+      <path d="M90 98 L82 140" />
+      <path d="M145 98 L155 140" />
+      {s >= 1 && (
+        <>
+          <H cx={reverse && s >= 2 ? 150 : 120} cy={s === 1 ? 24 : 28} />
+          {s === 1 ? (
+            <>
+              <path d="M120 33 L120 55" strokeWidth="2.2" />
+              <path d="M120 45 L100 70" />
+              <path d="M120 45 L140 70" />
+              <path d="M120 55 L110 90" strokeOpacity="0.5" strokeDasharray="4 3" />
+            </>
+          ) : (
+            <>
+              <path
+                d={
+                  reverse
+                    ? "M145 36 C135 50, 125 68, 120 82"
+                    : "M120 37 L120 78"
+                }
+                strokeWidth="2.2"
+              />
+              <path d="M120 52 L92 78" />
+              <path d="M120 52 L148 78" />
+              <path d="M120 78 L95 115 L88 145" />
+              <path d="M120 78 L145 115 L155 145" />
+              {s >= 3 && (
+                <>
+                  <path d="M120 45 L100 40" strokeOpacity="0.5" />
+                  <path d="M92 78 L92 78" />
+                </>
+              )}
+            </>
+          )}
+        </>
+      )}
+    </g>
+  );
+}
+
+/* —— 跪趴后入类 —— */
+function sceneKneelBehind(id, step) {
+  const s = step === "overview" ? 2 : step;
+  const low = id === "knee-chest" && s >= 2;
+  return (
+    <g>
+      <Ground />
+      {/* 前方 */}
+      {s >= 0 && (
+        <>
+          <H cx={low ? 36 : 42} cy={low ? 105 : 72} />
+          <path
+            d={
+              low
+                ? "M45 100 C75 68, 110 50, 145 58 C160 64, 168 75, 172 85"
+                : s === 0
+                  ? "M50 74 C80 70, 120 70, 150 78"
+                  : "M50 74 C75 58, 110 52, 145 60"
+            }
+            strokeWidth="2.2"
+          />
+          <path d="M60 72 L45 115 L38 145" />
+          <path d="M130 58 L122 115 L115 148" />
+          <path d="M148 65 L155 118 L160 148" />
+        </>
+      )}
+      {s >= 1 && (
+        <>
+          <H cx={s === 1 ? 210 : 198} cy={s === 1 ? 40 : 48} />
+          <path
+            d={
+              s === 1
+                ? "M200 48 L190 90"
+                : "M190 55 C175 68, 160 80, 150 90"
+            }
+            strokeWidth="2.2"
+          />
+          <path d="M185 60 L180 110 L175 148" />
+          <path d="M195 65 L210 110 L215 148" />
+        </>
+      )}
+    </g>
+  );
+}
+
+/* —— 侧卧类 —— */
+function sceneSide(id, step) {
+  const s = step === "overview" ? 2 : step;
+  const scissor = id === "scissor";
+  return (
+    <g>
+      <Ground />
+      <H cx={55} cy={60} />
+      <path d="M64 64 C100 58, 140 62, 170 72" strokeWidth="2.2" />
+      <path d="M85 64 L75 110 L68 145" />
+      {scissor && s >= 2 ? (
+        <path d="M120 68 L165 105 L180 135" />
+      ) : (
+        <path d="M130 68 L150 100 L160 135" />
+      )}
+      {s >= 1 && (
+        <>
+          <H cx={42} cy={s === 1 ? 35 : 44} />
+          <path
+            d={
+              s === 1
+                ? "M50 42 C80 38, 120 42, 150 52"
+                : "M50 50 C85 46, 125 50, 155 60"
+            }
+            strokeWidth="2.2"
+          />
+          <path d="M70 48 L62 95 L55 130" />
+          {scissor && s >= 2 ? (
+            <path d="M115 52 L75 105 L60 135" />
+          ) : (
+            <path d="M115 52 L130 90 L140 125" />
+          )}
+        </>
+      )}
+      {scissor && s >= 2 && (
+        <circle cx={118} cy={90} r="3.5" strokeOpacity="0.35" />
+      )}
+    </g>
+  );
+}
+
+/* —— 面对面坐 —— */
+function sceneSitFace(id, step) {
+  const s = step === "overview" ? 2 : step;
+  return (
+    <g>
+      <Ground />
+      <H cx={78} cy={38} />
+      <path d="M78 47 L78 98" strokeWidth="2.2" />
+      <path d="M78 60 L55 88" />
+      <path d="M78 98 L50 135 L45 150" />
+      <path d="M78 98 L105 135" />
+      {s >= 1 && (
+        <>
+          <H cx={s === 1 ? 190 : 155} cy={38} />
+          <path
+            d={s === 1 ? "M190 47 L190 90" : "M155 47 L155 98"}
+            strokeWidth="2.2"
+          />
+          {s === 1 ? (
+            <>
+              <path d="M190 60 L170 85" />
+              <path d="M190 90 L175 130" />
+            </>
+          ) : (
+            <>
+              <path d="M155 60 L130 80" />
+              <path d="M155 60 L180 88" />
+              <path d="M155 98 L130 135" />
+              <path d="M155 98 L185 130" />
+              {s >= 2 && (
+                <>
+                  <path
+                    d="M95 62 C112 56, 128 56, 140 62"
+                    strokeOpacity="0.4"
+                    strokeDasharray="5 4"
+                  />
+                  <path
+                    d="M95 78 C112 86, 128 86, 140 78"
+                    strokeOpacity="0.4"
+                    strokeDasharray="5 4"
+                  />
+                </>
+              )}
+            </>
+          )}
+        </>
+      )}
+    </g>
+  );
+}
+
+/* —— 椅子 —— */
+function sceneChair(id, step) {
+  const s = step === "overview" ? 2 : step;
+  return (
+    <g>
+      <Ground />
+      <path d="M55 115 V70 H145 V115" strokeWidth="2.2" />
+      <path d="M55 70 V35" />
+      <path d="M60 115 V148" />
+      <path d="M140 115 V148" />
+      {s >= 0 && (
+        <>
+          <H cx={100} cy={36} />
+          <path d="M100 45 L100 78" strokeWidth="2.2" />
+          <path d="M100 58 L78 72" />
+          <path d="M100 78 L85 115" />
+          <path d="M100 78 L120 115" />
+        </>
+      )}
+      {s >= 1 && (
+        <>
+          <H cx={s === 1 ? 175 : 148} cy={s === 1 ? 22 : 26} />
+          <path
+            d={
+              s === 1
+                ? "M175 30 L165 70"
+                : "M142 34 C128 52, 118 68, 110 80"
+            }
+            strokeWidth="2.2"
+          />
+          {s >= 2 && (
+            <>
+              <path d="M130 48 L158 62" />
+              <path d="M110 80 L95 125" />
+              <path d="M110 80 L132 128" />
+            </>
+          )}
+        </>
+      )}
+    </g>
+  );
+}
+
+/* —— 站立 —— */
+function sceneStand(id, step) {
+  const s = step === "overview" ? 2 : step;
+  return (
+    <g>
+      <path d="M28 15 V160" strokeOpacity="0.35" strokeDasharray="7 5" strokeWidth="1.8" />
+      <Ground />
+      <H cx={75} cy={28} />
+      <path d="M75 37 L75 100" strokeWidth="2.2" />
+      <path d="M75 55 L52 82" />
+      <path d="M75 100 L58 150" />
+      <path d="M75 100 L95 150" />
+      {s >= 1 && (
+        <>
+          <H cx={s === 1 ? 175 : 138} cy={26} />
+          <path
+            d={s === 1 ? "M175 35 L175 95" : "M138 35 L138 100"}
+            strokeWidth="2.2"
+          />
+          {s === 1 ? (
+            <>
+              <path d="M175 55 L155 80" />
+              <path d="M175 95 L160 150" />
+              <path d="M175 95 L190 150" />
+            </>
+          ) : (
+            <>
+              <path d="M138 55 L110 80" />
+              <path d="M138 55 L162 80" />
+              <path d="M138 100 L120 150" />
+              <path d="M138 100 L158 150" />
+              {s >= 3 && (
+                <path d="M95 150 L112 120" strokeOpacity="0.55" strokeDasharray="4 3" />
+              )}
+            </>
+          )}
+        </>
+      )}
+    </g>
+  );
+}
+
+/* —— 床沿 / 桌边 —— */
+function sceneEdge(id, step) {
+  const s = step === "overview" ? 2 : step;
+  return (
+    <g>
+      <path d="M15 100 H150" strokeWidth="2.4" />
+      <path d="M15 100 V155" strokeOpacity="0.35" />
+      <Ground />
+      <H cx={65} cy={55} />
+      <path d="M72 58 C95 72, 115 88, 130 100" strokeWidth="2.2" />
+      <path d="M80 65 L70 95" />
+      {s >= 2 && <path d="M120 95 L148 82" />}
+      {s >= 1 && (
+        <>
+          <H cx={s === 1 ? 200 : 185} cy={38} />
+          <path
+            d={s === 1 ? "M200 47 L195 100" : "M185 47 L172 100"}
+            strokeWidth="2.2"
+          />
+          <path d="M180 60 L155 92" />
+          <path d="M185 65 L205 100" />
+          <path d="M175 100 L165 150" />
+          <path d="M178 100 L195 150" />
+        </>
+      )}
+    </g>
+  );
+}
+
+/* —— 桥式 —— */
+function sceneBridge(id, step) {
+  const s = step === "overview" ? 2 : step;
+  return (
+    <g>
+      <Ground />
+      {s === 0 ? (
+        <>
+          <H cx={48} cy={100} />
+          <path d="M57 100 H170" strokeWidth="2.2" />
+          <path d="M90 100 L85 140" />
+          <path d="M140 100 L150 140" />
+        </>
+      ) : (
+        <>
+          <H cx={42} cy={s === 1 ? 100 : 95} />
+          <path
+            d={
+              s === 1
+                ? "M50 98 C80 75, 120 72, 160 90"
+                : "M50 92 C80 52, 125 48, 165 75 C175 85, 182 100, 185 115"
+            }
+            strokeWidth="2.2"
+          />
+          <path d="M80 70 L72 125 L68 150" />
+          <path d="M145 60 L155 125 L160 150" />
+          {s >= 2 && (
+            <>
+              <H cx={115} cy={26} />
+              <path d="M115 35 L115 55" strokeWidth="2.2" />
+              <path d="M115 45 L95 60" />
+              <path d="M115 45 L140 60" />
+            </>
+          )}
+        </>
+      )}
+    </g>
+  );
 }

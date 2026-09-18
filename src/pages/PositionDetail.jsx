@@ -61,8 +61,26 @@ export default function PositionDetail() {
           <p className="mt-3 text-gray-600">{position.description}</p>
         </div>
 
-        <div className="aspect-[16/10] rounded-2xl bg-gradient-to-br from-rose-50 to-orange-50 flex items-center justify-center mb-8 border border-rose-100">
-          <PositionIllustration id={position.id} className="text-rose-400 max-w-md w-full h-full" />
+        {/* 总览 + 四步缩略 */}
+        <div className="mb-8 space-y-3">
+          <div className="aspect-[16/10] rounded-2xl bg-gradient-to-br from-rose-50 to-orange-50 flex items-center justify-center border border-rose-100">
+            <PositionIllustration id={position.id} className="text-rose-400 max-w-md w-full h-full" />
+          </div>
+          <div className="grid grid-cols-4 gap-2">
+            {[0, 1, 2, 3].map((s) => (
+              <div
+                key={s}
+                className="aspect-square rounded-xl bg-gradient-to-br from-rose-50 to-orange-50 border border-rose-100 flex flex-col items-center justify-center overflow-hidden"
+              >
+                <PositionIllustration
+                  id={position.id}
+                  step={s}
+                  className="text-rose-400 w-full h-full scale-110"
+                />
+                <span className="text-[10px] text-gray-400 pb-1 -mt-1">步骤 {s + 1}</span>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8 text-sm">
@@ -82,7 +100,7 @@ export default function PositionDetail() {
 
         <section className="bg-white rounded-2xl border border-gray-100 p-6 mb-8">
           <h2 className="text-lg font-semibold text-gray-900 mb-5">动作步骤</h2>
-          <StepList steps={position.steps} />
+          <StepList steps={position.steps} positionId={position.id} />
         </section>
 
         <section className="bg-white rounded-2xl border border-gray-100 p-6 mb-8">
