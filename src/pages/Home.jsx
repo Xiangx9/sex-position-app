@@ -4,6 +4,17 @@ import { positions, categories, filterTags } from "../data/positions";
 import PositionCard from "../components/PositionCard";
 import Header from "../components/Header";
 
+// 只有明确写明需要支撑物/必需道具的才算「需要道具」；
+// 「可选枕头」「无必需要求」这类只是可选项，不算。
+const PROP_REQUIRED = /必需|需要|必备|稳固|坚固|承重|防滑/;
+const PROP_NONE = /^无(必需|需)|无需/;
+
+function needsProps(position) {
+  const text = (position.props || "").trim();
+  if (!text || PROP_NONE.test(text)) return false;
+  return PROP_REQUIRED.test(text);
+}
+
 function matchesFilter(position, filter) {
   if (filter === "全部") return true;
   if (filter === "入门推荐") return position.category.includes("入门") || position.difficulty === 1;
@@ -11,7 +22,8 @@ function matchesFilter(position, filter) {
   if (filter === "侧重女方") return position.category.includes("侧重女方");
   if (filter === "轻松舒适") return position.category.includes("轻松舒适") || position.intensity === "低";
   if (filter === "高难度挑战") return position.category.includes("高难度") || position.difficulty >= 3;
-  if (filter === "需要道具") return position.category.includes("道具辅助") || (position.props && !position.props.startsWith("无"));
+  if (filter === "需要道具")
+    return position.category.includes("道具辅助") || needsProps(position);
   return true;
 }
 
