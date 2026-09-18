@@ -67,17 +67,19 @@ export default function PositionDetail() {
             <PositionIllustration id={position.id} className="text-rose-400 max-w-md w-full h-full" />
           </div>
           <div className="grid grid-cols-4 gap-2">
-            {[0, 1, 2, 3].map((s) => (
+            {["准备", "靠近", "对齐", "完成"].map((label, s) => (
               <div
                 key={s}
-                className="aspect-square rounded-xl bg-gradient-to-br from-rose-50 to-orange-50 border border-rose-100 flex flex-col items-center justify-center overflow-hidden"
+                className="rounded-xl bg-gradient-to-br from-rose-50 to-orange-50 border border-rose-100 flex flex-col items-center overflow-hidden"
               >
-                <PositionIllustration
-                  id={position.id}
-                  step={s}
-                  className="text-rose-400 w-full h-full scale-110"
-                />
-                <span className="text-[10px] text-gray-400 pb-1 -mt-1">步骤 {s + 1}</span>
+                <div className="aspect-square w-full flex items-center justify-center">
+                  <PositionIllustration
+                    id={position.id}
+                    step={s}
+                    className="text-rose-400 w-full h-full"
+                  />
+                </div>
+                <span className="text-[10px] text-gray-500 pb-1.5 font-medium">{label}</span>
               </div>
             ))}
           </div>
